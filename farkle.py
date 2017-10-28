@@ -8,24 +8,36 @@ numDice = input("How many dice? ")
 
 score = 0;
 setArray = [];
-one   = u"\u2680"
-two   = u"\u2681"
-three = u"\u2682"
-four  = u"\u2683"
-five  = u"\u2684"
-sixe  = u"\u2685"
+
 
 def rollEm(dice):
     """ Roll the dice! """
     for i in range (0,dice):
         roll = random.randrange(1,dice,1)
         setArray.append(roll)
-        print 'Roll %s: %s' % (i, roll)
+        #print 'Roll %s: %s' % (i, roll)
 
     return setArray
 
+def offerChoice(rollSet):
+    """ Offer the decisions to the player """
+    print "You rolled:"
+    n = 1
+    for i in rollSet:
+        print "Roll %i : %s" % (n,transToPips(i))
+        n+=1
+
+    return processChoice(raw_input("Which rolls are you keeping (Separate them by spaces.  0 for none)? ").split(' '))
+
+def processChoice(selection):
+    """ Decide the outcome of the player's choice """
+    for i in selection:
+        print "You chose %s " % (i)
+    return
+
+
 def countPips(pips):
-    """ Itemize the rolls and count the groupings to 
+    """ Itemize the rolls and count the groupings to
     help determine scoring. """
     c = Counter(pips)
 
@@ -65,4 +77,34 @@ def tallyScore(roll,quantity):
 
     return possible
 
-countPips(rollEm(numDice))
+def transToPips(num):
+    one   = u"\u2680"
+    two   = u"\u2681"
+    three = u"\u2682"
+    four  = u"\u2683"
+    five  = u"\u2684"
+    six   = u"\u2685"
+
+    I   = "[ . ] {1}"
+    II  = "[ : ] {2}"
+    III = "[ :.] {3}"
+    IV  = "[ ::] {4}"
+    V   = "[:.:] {5}"
+    VI  = "[:::] {6}"
+
+    if num == 1:
+        return I
+    elif num == 2:
+        return II
+    elif num == 3:
+        return III
+    elif num == 4:
+        return IV
+    elif num == 5:
+        return V
+    elif num == 6:
+        return VI
+    else:
+        return "Wha happen?"
+
+offerChoice(rollEm(numDice))
