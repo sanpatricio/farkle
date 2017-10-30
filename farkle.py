@@ -6,14 +6,14 @@ from collections import Counter
 
 numDice = input("How many dice? ")
 
-score = 0;
-setArray = [];
+score = 0
+setArray = []
 
 
 def rollEm(dice):
     """ Roll the dice! """
     for i in range (0,dice):
-        roll = random.randrange(1,dice,1)
+        roll = int(random.randrange(1,dice,1))
         setArray.append(roll)
         #print 'Roll %s: %s' % (i, roll)
 
@@ -27,13 +27,21 @@ def offerChoice(rollSet):
         print "Roll %i : %s" % (n,transToPips(i))
         n+=1
 
-    return processChoice(raw_input("Which rolls are you keeping (Separate them by spaces.  0 for none)? ").split(' '))
+    return processChoice(raw_input("Which rolls are you keeping (Separate them by spaces.  0 for none)? ").split(' '),rollSet)
 
-def processChoice(selection):
-    """ Decide the outcome of the player's choice """
+def processChoice(selection,values):
+    """ Collect values of the player's choice and packages
+    them in an array for the next function """
+
+    selection_array = []
+
     for i in selection:
-        print "You chose %s " % (i)
-    return
+        i = int(i)
+        i -= 1
+        selection_array.append(values[i])
+
+    print "You chose %s" % selection_array
+    return selection_array
 
 
 def countPips(pips):
