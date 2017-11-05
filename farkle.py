@@ -5,6 +5,7 @@ import random
 from collections import Counter
 
 numDice = input("How many dice? ")
+currCount = numDice
 
 score = 0
 setArray = []
@@ -15,9 +16,11 @@ def rollEm(dice):
     for i in range (0,dice):
         roll = int(random.randrange(1,dice,1))
         setArray.append(roll)
-        #print 'Roll %s: %s' % (i, roll)
 
-    return setArray
+    if currCount > 0:
+        return offerChoice(setArray)
+    else:
+        return "Game over!"
 
 def offerChoice(rollSet):
     """ Offer the decisions to the player """
@@ -27,7 +30,7 @@ def offerChoice(rollSet):
         print "Roll %i : %s" % (n,transToPips(i))
         n+=1
 
-    return processChoice(raw_input("Which rolls are you keeping (Separate them by spaces.  0 for none)? ").split(' '),rollSet)
+    return processChoice(raw_input("Which rolls are you keeping (Separate them by commas.  0 for none)? ").split(','),rollSet)
 
 def processChoice(selection,values):
     """ Collect values of the player's choice and packages
@@ -41,21 +44,22 @@ def processChoice(selection,values):
         selection_array.append(values[i])
 
     print "You chose %s" % selection_array
-    return selection_array
+    return countPips(selection_array)
 
 
 def countPips(pips):
     """ Itemize the rolls and count the groupings to
     help determine scoring. """
     c = Counter(pips)
+    score = 0
 
     for key,val in c.items():
-        print tallyScore(key,val)
+        score = score + tallyScore(key,val)
 
-    #return c
+    print "Total points: %s" % score
 
 def tallyScore(roll,quantity):
-    print "%s appeared %s times" % (roll, quantity)
+    print "%s x %s" % (transToPips(roll), quantity)
 
     """ Scoring:
     1 = 10
@@ -82,8 +86,16 @@ def tallyScore(roll,quantity):
         pass
 
     possible = poss1+poss2+poss3+poss4
-
+    print "This grouping is worth %s" % possible
     return possible
+
+def diceLeft(origRoll,currCount,thisRoll):
+    if origRoll - currCount != 0:
+        message = currCount - thisRoll
+    else:
+        message = "Game over"
+
+    return message
 
 def transToPips(num):
     one   = u"\u2680"
@@ -93,12 +105,12 @@ def transToPips(num):
     five  = u"\u2684"
     six   = u"\u2685"
 
-    I   = "[ . ] {1}"
-    II  = "[ : ] {2}"
-    III = "[ :.] {3}"
-    IV  = "[ ::] {4}"
-    V   = "[:.:] {5}"
-    VI  = "[:::] {6}"
+    I   = "[ I ]"
+    II  = "[II ]"
+    III = "[III]"
+    IV  = "[IV ]"
+    V   = "[ V ]"
+    VI  = "[VI ]"
 
     if num == 1:
         return I
@@ -115,4 +127,4 @@ def transToPips(num):
     else:
         return "Wha happen?"
 
-offerChoice(rollEm(numDice))
+rollEm(numDice)
